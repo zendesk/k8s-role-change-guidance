@@ -1,0 +1,17 @@
+---
+name: K8s role change guidance
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  k8s-role-change-guidance:
+    runs-on: [ubuntu-latest]
+    name: K8s role change guidance
+    steps:
+      - uses: zendesk/checkout@v3
+        with:
+          fetch-depth: 2
+      - uses: zendesk/k8s-role-change-guidance@main
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}

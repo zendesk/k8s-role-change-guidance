@@ -4,15 +4,14 @@
 # (Using Javascript would fit better with the Github platform:
 # https://docs.github.com/en/actions/creating-actions/creating-a-javascript-action)
 
-require_relative './comment_builder'
-
 class CommentWriter
-  def initialize(event, github_client)
+  def initialize(event, github_client, magic_text)
     @event = event
     @github_client = github_client
+    @magic_text = magic_text
   end
 
-  attr_reader :event, :github_client
+  attr_reader :event, :github_client, :magic_text
 
   def write(comment_text)
     update_pr(comment_text, find_existing_comment)
@@ -27,7 +26,7 @@ class CommentWriter
     url += '?per_page=100'
 
     comments = github_client.get(url)
-    comment = comments.find { |c| c.fetch('body').include?(CommentBuilder::MAGIC_TEXT) }
+    comment = comments.find { |c| c.fetch('body').include?(magic_text) }
 
     if comment
       puts "Found existing comment #{comment.fetch('url')}"
@@ -39,6 +38,8 @@ class CommentWriter
   end
 
   def update_pr(comment_text, existing_comment)
+    comment_text = "#{magic_text}\n\n#{comment_text}" unless comment_text.nil?
+
     if !comment_text.nil? && existing_comment.nil?
       url = event.fetch('pull_request').fetch('comments_url')
       c = github_client.post(url, { body: comment_text })
