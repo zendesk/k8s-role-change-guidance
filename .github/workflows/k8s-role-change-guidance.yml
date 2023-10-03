@@ -9,7 +9,9 @@ jobs:
     runs-on: [ubuntu-latest]
     name: K8s role change guidance
     steps:
-      - uses: zendesk/checkout@HEAD
+      - uses: zendesk/checkout@v3
+        with:
+          fetch-depth: 2
       - uses: zendesk/k8s-role-change-guidance@dev
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
