@@ -1,7 +1,7 @@
 name: Kubernetes Role Change Guidance
 description: Provide a comment explaining how safely to handle role additions / removals
 branding:
-  icon: link
+  icon: alert-triangle
   color: blue
 inputs:
   github_token:
