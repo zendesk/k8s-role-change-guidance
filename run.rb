@@ -26,8 +26,10 @@ $CHILD_STATUS.success? or raise 'git diff failed'
 active = added_or_removed_files.split("\0").any? { |path| path.start_with?('kubernetes/manifests/') }
 
 if active
+  puts 'Added / removed manifests detected'
   content = File.read(File.expand_path('guidance.md', __dir__))
   writer.write(content)
 else
+  puts 'No added / removed manifests detected'
   writer.write(nil)
 end
