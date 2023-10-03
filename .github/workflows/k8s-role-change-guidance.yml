@@ -10,6 +10,6 @@ jobs:
     name: K8s role change guidance
     steps:
       - uses: zendesk/checkout@HEAD
-      - uses: zendesk/k8s-role-change-guidance@main
+      - uses: zendesk/k8s-role-change-guidance@dev
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
