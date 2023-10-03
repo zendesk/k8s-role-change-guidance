@@ -1,14 +1,15 @@
 ---
-name: Link changed markdown
+name: K8s role change guidance
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [opened, synchronize, reopened]
 
 jobs:
-  link-changed-markdown:
+  k8s-role-change-guidance:
     runs-on: [ubuntu-latest]
-    name: Link changed markdown
+    name: K8s role change guidance
     steps:
-      - uses: zendesk/link-changed-markdown@main
+      - uses: zendesk/checkout
+      - uses: zendesk/k8s-role-change-guidance@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,14 +1,16 @@
-name: Link changed markdown
-description: Provide a comment linking to the rendered forms of any added / updated / deleted markdown files
+name: Kubernetes Role Change Guidance
+description: Provide a comment explaining how safely to handle role additions / removals
 branding:
   icon: link
-  color: green
+  color: blue
 inputs:
   github_token:
     description: 'GITHUB_TOKEN'
     required: true
 runs:
   using: 'composite'
+  # Requires that the pull request's merge commit is checked out
+  # to the current working directory.
   steps:
     - run: ${{ github.action_path }}/run.rb
       shell: bash

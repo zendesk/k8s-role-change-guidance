@@ -1,17 +1,18 @@
-# link-changed-markdown
+# k8s-role-change-guidance
 
-![Latest Release](https://img.shields.io/github/v/release/zendesk/link-changed-markdown?label=Latest%20Release)
-![Tests](https://github.com/zendesk/link-changed-markdown/workflows/Test/badge.svg?branch=main)
+![Latest Release](https://img.shields.io/github/v/release/zendesk/k8s-role-change-guidance?label=Latest%20Release)
+![Tests](https://github.com/zendesk/k8s-role-change-guidance/workflows/Test/badge.svg?branch=main)
 
 A custom Github Action for use on pull requests. The action:
 
- * looks for added / changed / removed markdown files (`*.md`)
- * creates (or updates, if it's already there) a comment on the PR, linking
-   to the rendered forms of the affected files
+ * looks for added / removed Kubernetes roles (under `./kubernetes`)
+ * if there are any such roles, then adds a comment (unless already there)
+   to the pull request explaining [how to merge and deploy safely](./guidance.md)
+ * if there no such roles, then deletes any such comment
 
 ## Inputs
 
-See `inputs` in [action.yml](https://github.com/zendesk/link-changed-markdown/blob/main/action.yml).
+See `inputs` in [action.yml](https://github.com/zendesk/k8s-role-change-guidance/blob/main/action.yml).
 
 ## Output
 
@@ -27,11 +28,12 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  link-changed-markdown:
+  k8s-role-change-guidance:
     runs-on: [ubuntu-latest]
-    name: Link changed markdown
+    name: Kubernetes role change guidance
     steps:
-      - uses: zendesk/link-changed-markdown@VERSION
+      - uses: zendesk/checkout
+      - uses: zendesk/k8s-role-change-guidance@VERSION
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
