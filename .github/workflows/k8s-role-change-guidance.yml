@@ -12,6 +12,6 @@ jobs:
       - uses: zendesk/checkout@v3
         with:
           fetch-depth: 2
-      - uses: zendesk/k8s-role-change-guidance@main
+      - uses: zendesk/k8s-role-change-guidance@v0.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
