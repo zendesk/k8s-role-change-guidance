@@ -12,12 +12,14 @@ Please read the following guidance on how to merge and deploy this PR safely.
 
 * Wait until you're ready to merge.
 * Call a "hold merges" on all pull requests for this repository.
+  * If you can, enforce this by changing the repository's branch protection settings.
 * If there are any in-progress deployments, wait for them to complete.
 * If there are any not-yet-deployed tags, wait for them to be deployed.
 * **Only once there are no in-progress deployments, AND no undeployed tags**, merge this pull request.
 * Deploy the release that the merge created.
 * Wait for that deployment to complete.
 * Lift the "hold merges".
+  * If the branch protection settings were changed earlier, then change them back.
 
 ## Minimizing risk
 
