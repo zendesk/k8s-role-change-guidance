@@ -8,6 +8,8 @@ jobs:
   run-on-self:
     runs-on: [ubuntu-latest]
     steps:
+      - run: 'echo fn="${{ github.event.pull_request.head.repo.full_name }}"'
+      - run: 'echo sha="${{ github.event.pull_request.head.sha }}"'
       - uses: ${{ github.event.pull_request.head.repo.full_name }}@${{ github.event.pull_request.head.sha }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
