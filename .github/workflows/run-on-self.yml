@@ -1,0 +1,13 @@
+---
+name: Run on self
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  run-on-self:
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: ${{ event.pull_request.head.repo.full_name }}@${{ event.pull_request.head.sha }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
