@@ -7,6 +7,9 @@ inputs:
   github_token:
     description: 'GITHUB_TOKEN'
     required: true
+  require_label:
+    description: 'The name of a label which MUST be present on the pull request'
+    required: false
 runs:
   using: 'composite'
   # Requires that the pull request's merge commit is checked out
@@ -16,3 +19,4 @@ runs:
       shell: bash
       env:
         GITHUB_TOKEN: ${{ inputs.github_token }}
+        REQUIRE_LABEL: ${{ inputs.require_label }}

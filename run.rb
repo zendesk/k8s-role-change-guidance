@@ -7,8 +7,12 @@
 
 require 'English'
 require 'json'
+require 'open3'
 require_relative './comment_writer'
 require_relative './github_client'
+
+$stdout.sync = true
+$stderr.sync = true
 
 magic_text = '<!-- k8s-role-change-guidance -->'
 
@@ -30,7 +34,6 @@ left, right = %w[base head].map do |key|
 
   p [key, owner, name, commit]
 
-  require 'open3'
   stdout, status = Open3.capture2(
     'gh', 'api', 'graphql',
     '-F', "owner=#{owner}",
@@ -62,6 +65,20 @@ if active
   puts 'Added / removed manifests detected'
   content = File.read(File.expand_path('guidance.md', __dir__))
   writer.write(content)
+
+  if (required_label = ENV['REQUIRE_LABEL'])
+    pr_number = event.fetch('pull_request').fetch('number')
+    stdout, status = Open3.capture2("gh pr view #{pr_number} --json=labels")
+    exit 1 unless status.success?
+
+    existing_labels = JSON.parse(stdout).fetch('labels').map { |l| l.fetch('name') }
+    p({ existing_labels: })
+
+    unless existing_labels.include?(required_label)
+      warn "ERROR: This PR does not have the required label #{required_label.inspect}"
+      exit 1
+    end
+  end
 else
   puts 'No added / removed manifests detected'
   writer.write(nil)
