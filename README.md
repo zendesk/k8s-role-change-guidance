@@ -32,7 +32,6 @@ jobs:
     runs-on: [ubuntu-latest]
     name: Kubernetes role change guidance
     steps:
-      - uses: zendesk/checkout@...
       - uses: zendesk/k8s-role-change-guidance@VERSION
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
