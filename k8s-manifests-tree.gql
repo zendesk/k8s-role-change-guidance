@@ -1,0 +1,36 @@
+# gh api graphql -F owner=zendesk -F name=help_center -F manifestsTree=v23206:kubernetes/manifests
+
+query k8s_manifests($owner: String!, $name: String!, $manifestsTree: String = "HEAD:kubernetes/manifests") {
+    repository(owner: $owner, name: $name) {
+        object(expression: $manifestsTree) {
+            ... on Tree {
+                id
+                oid
+                entries {
+                    path # e.g. "staging"
+                    type
+                    object {
+                        ... on Tree {
+                            id
+                            oid
+                            entries {
+                                path # e.g. "pod999"
+                                type
+                                object {
+                                    ... on Tree {
+                                        id
+                                        oid
+                                        entries {
+                                            path # e.g. "app-server.yml"
+                                            type
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
