@@ -20,7 +20,9 @@ writer = CommentWriter.new(event, github_client, magic_text)
 # Assuming we're merging into main, then
 # HEAD^1 is `main`, and HEAD^2 is the branch we're merging.
 
-left, right = ['base', 'head'].map do |key|
+query_text = File.read(File.expand_path('k8s-manifests-tree.gql', __dir__))
+
+left, right = %w[base head].map do |key|
   branch = event.fetch('pull_request').fetch(key)
   owner = branch.fetch('repo').fetch('owner').fetch('login')
   name = branch.fetch('repo').fetch('name')
@@ -28,9 +30,31 @@ left, right = ['base', 'head'].map do |key|
 
   p [key, owner, name, commit]
 
-  yaml_files = `gh api graphql -F owner=#{owner} -F name=#{name} -F manifestsTree=#{commit}:kubernetes/manifests -f query=$( cat k8s-manifests-tree.gql ) | jq -r .. | grep yml$`
-  yaml_files.sort.tap { |x| p x }
+  require 'open3'
+  stdout, status = Open3.capture2(
+    'gh', 'api', 'graphql',
+    '-F', "owner=#{owner}",
+    '-F', "name=#{name}",
+    '-F', "manifestsTree=#{commit}:kubernetes/manifests",
+    '-f', "query=#{query_text}"
+  )
+
+  exit 1 unless status.success?
+
+  data = JSON.parse(stdout)
+
+  envs = data.fetch('data').fetch('repository').fetch('object').fetch('entries').select do |entry|
+    entry.fetch('type') == 'tree'
+  end
+
+  pipelines = envs.flat_map { |tree| tree.fetch('object').fetch('entries') }
+
+  stages = pipelines.flat_map { |tree| tree.fetch('object').fetch('entries') }
+
+  stages.map { |e| e.fetch('path') }.sort
 end
+
+p({ left:, right: })
 
 active = (left != right)
 
