@@ -12,6 +12,10 @@ runs:
   # Requires that the pull request's merge commit is checked out
   # to the current working directory.
   steps:
+    - uses: zendesk/setup-ruby@v1.192.0
+      with:
+        bundler-cache: true
+
     - run: ${{ github.action_path }}/run.rb
       shell: bash
       env:
