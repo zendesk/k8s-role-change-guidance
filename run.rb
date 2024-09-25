@@ -7,8 +7,8 @@
 
 require 'English'
 require 'json'
-require_relative './comment_writer'
-require_relative './github_client'
+require_relative 'comment_writer'
+require_relative 'github_client'
 
 magic_text = '<!-- k8s-role-change-guidance -->'
 
